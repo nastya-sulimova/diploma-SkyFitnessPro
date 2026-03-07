@@ -1,0 +1,33 @@
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  
+  @media (min-width: 768px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .loading {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #4a4a4a;
+    padding: 40px;
+    grid-column: 1 / -1;
+  }
+  
+  .error {
+    text-align: center;
+    color: #ef4444;
+    font-size: 1.2rem;
+    grid-column: 1 / -1;
+    padding: 40px;
+  }
