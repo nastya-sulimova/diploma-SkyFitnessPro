@@ -1,0 +1,62 @@
+.container {
+    min-height: calc(100vh - 72px);
+    background-color: #f9fafb;
+    padding: 40px 20px;
+  }
+  
+  .wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 32px;
+  }
+  
+  .userInfo {
+    background-color: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .infoItem {
+    display: flex;
+    gap: 16px;
+    font-size: 16px;
+  }
+  
+  .label {
+    font-weight: 500;
+    color: #4a4a4a;
+    min-width: 100px;
+  }
+  
+  .value {
+    color: #1a1a1a;
+  }
+  
+  .coursesSection {
+    background-color: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .sectionTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 24px;
+  }
+  
+  .emptyMessage {
+    text-align: center;
+    color: #4a4a4a;
+    font-size: 16px;
+    padding: 40px;
+  }
