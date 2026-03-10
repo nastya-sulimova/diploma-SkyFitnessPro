@@ -1,0 +1,19 @@
+.scrollTop {
+    background: #BCEC30;
+    padding: 16px 26px;
+    border-radius: 46px;
+    font-weight: 400;
+    font-size: 18px;
+    letter-spacing: 0px;
+    text-align: center;
+    color: black;
+  }
+  
+  .scrollTop:hover {
+    background-color: #C6FF00;
+  }
+
+  .scrollTopBlock {
+    display: flex;
+    justify-content: center;
+  }
