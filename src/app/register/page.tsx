@@ -1,12 +1,70 @@
 "use client";
 
+import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import styles from "./page.module.css";
 
 interface RegisterPageProps {
   onSwitchToLogin?: () => void;
+  onClose?: () => void;
 }
 
-export default function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
+export default function RegisterPage({
+  onSwitchToLogin,
+  onClose,
+}: RegisterPageProps) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+  }>({});
+
+  const { handleRegister, loading, error } = useAuth();
+
+  const validateForm = () => {
+    const newErrors: typeof errors = {};
+
+    if (!email) {
+      newErrors.email = "Введите email";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Введите корректный email";
+    }
+
+    if (!password) {
+      newErrors.password = "Введите пароль";
+    } else {
+      if (password.length < 6) {
+        newErrors.password = "Пароль должен содержать не менее 6 символов";
+      } else if ((password.match(/[!@#$%^&*]/g) || []).length < 2) {
+        newErrors.password = "Пароль должен содержать не менее 2 спецсимволов";
+      } else if (!/[A-Z]/.test(password)) {
+        newErrors.password =
+          "Пароль должен содержать хотя бы одну заглавную букву";
+      }
+    }
+
+    if (password !== confirmPassword) {
+      newErrors.confirmPassword = "Пароли не совпадают";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    try {
+      await handleRegister({ email, password });
+      if (onClose) onClose();
+    } catch (err) {}
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -126,34 +184,72 @@ export default function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
           </svg>
         </div>
 
-        <form className={styles.form}>
+        <form onSubmit={onSubmit} className={styles.form}>
           <div className={styles.fields}>
-            <input
-              type="email"
-              placeholder="Эл. почта"
-              className={styles.input}
-            />
-            <input
-              type="password"
-              placeholder="Пароль"
-              className={styles.input}
-            />
-            <input
-              type="password"
-              placeholder="Повторите пароль"
-              className={styles.input}
-            />
+            <div className={styles.fieldWrapper}>
+              <input
+                type="email"
+                placeholder="Эл. почта"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={`${styles.input} ${
+                  errors.email ? styles.input_error : ""
+                }`}
+              />
+              {errors.email && (
+                <span className={styles.errorText}>{errors.email}</span>
+              )}
+            </div>
+
+            <div className={styles.fieldWrapper}>
+              <input
+                type="password"
+                placeholder="Пароль"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`${styles.input} ${
+                  errors.password ? styles.input_error : ""
+                }`}
+              />
+              {errors.password && (
+                <span className={styles.errorText}>{errors.password}</span>
+              )}
+            </div>
+
+            <div className={styles.fieldWrapper}>
+              <input
+                type="password"
+                placeholder="Повторите пароль"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className={`${styles.input} ${
+                  errors.confirmPassword ? styles.input_error : ""
+                }`}
+              />
+              {errors.confirmPassword && (
+                <span className={styles.errorText}>
+                  {errors.confirmPassword}
+                </span>
+              )}
+              {error && <div className={styles.errorText}>{error}</div>}
+            </div>
           </div>
 
           <div className={styles.buttons}>
-            <button type="submit" className={styles.loginButton}>
-              Зарегистрироваться
+            <button
+              type="submit"
+              className={styles.loginButton}
+              disabled={loading}
+            >
+              {loading ? "Регистрация..." : "Зарегистрироваться"}
             </button>
+
             {onSwitchToLogin && (
               <button
                 type="button"
                 onClick={onSwitchToLogin}
                 className={styles.registerButton}
+                disabled={loading}
               >
                 Войти
               </button>

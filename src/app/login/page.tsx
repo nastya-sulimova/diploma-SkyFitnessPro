@@ -1,12 +1,54 @@
 "use client";
 
+import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import styles from "./page.module.css";
 
 interface LoginPageProps {
   onSwitchToRegister?: () => void;
+  onClose?: () => void;
 }
 
-export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
+export default function LoginPage({
+  onSwitchToRegister,
+  onClose,
+}: LoginPageProps) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {}
+  );
+
+  const { handleLogin, loading, error } = useAuth();
+
+  const validateForm = () => {
+    const newErrors: { email?: string; password?: string } = {};
+
+    if (!email) {
+      newErrors.email = "Введите email";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Введите корректный email";
+    }
+
+    if (!password) {
+      newErrors.password = "Введите пароль";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    try {
+      await handleLogin({ email, password });
+      if (onClose) onClose();
+    } catch (err) {}
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -126,25 +168,55 @@ export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
           </svg>
         </div>
 
-        <form className={styles.form}>
+        <form onSubmit={onSubmit} className={styles.form}>
           <div className={styles.fields}>
-            <input type="email" placeholder="Логин" className={styles.input} />
-            <input
-              type="password"
-              placeholder="Пароль"
-              className={styles.input}
-            />
+            <div className={styles.fieldWrapper}>
+              <input
+                type="email"
+                placeholder="Логин"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={`${styles.input} ${
+                  errors.email ? styles.input_error : ""
+                }`}
+              />
+              {errors.email && (
+                <span className={styles.errorText}>{errors.email}</span>
+              )}
+            </div>
+
+            <div className={styles.fieldWrapper}>
+              <input
+                type="password"
+                placeholder="Пароль"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`${styles.input} ${
+                  errors.password ? styles.input_error : ""
+                }`}
+              />
+              {errors.password && (
+                <span className={styles.errorText}>{errors.password}</span>
+              )}
+              {error && <div className={styles.errorText}>{error}</div>}
+            </div>
           </div>
 
           <div className={styles.buttons}>
-            <button type="submit" className={styles.loginButton}>
-              Войти
+            <button
+              type="submit"
+              className={styles.loginButton}
+              disabled={loading}
+            >
+              {loading ? "Вход..." : "Войти"}
             </button>
+
             {onSwitchToRegister && (
               <button
                 type="button"
                 onClick={onSwitchToRegister}
                 className={styles.registerButton}
+                disabled={loading}
               >
                 Зарегистрироваться
               </button>
