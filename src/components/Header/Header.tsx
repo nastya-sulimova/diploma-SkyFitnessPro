@@ -1,15 +1,88 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./header.module.css";
+
 import LoginPage from "@/app/login/page";
 import RegisterPage from "@/app/register/page";
+import { isAuthenticated, getToken } from "@/utils/auth";
+
+const getNameFromEmail = (email: string): string => {
+  if (!email) return "Пользователь";
+  const namePart = email.split("@")[0];
+  return namePart.charAt(0).toUpperCase() + namePart.slice(1).toLowerCase();
+};
 
 export default function Header() {
   const [modal, setModal] = useState<null | "login" | "register">(null);
+  const [isAuth, setIsAuth] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [userData, setUserData] = useState<{
+    email: string;
+    displayName: string;
+  } | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const auth = isAuthenticated();
+      setIsAuth(auth);
+
+      if (auth) {
+        const email = localStorage.getItem("userEmail");
+
+        if (email) {
+          setUserData({
+            email: email,
+            displayName: getNameFromEmail(email),
+          });
+        } else {
+          setUserData({
+            email: "Пользователь",
+            displayName: "Пользователь",
+          });
+        }
+      } else {
+        setUserData(null);
+      }
+    };
+
+    checkAuth();
+
+    window.addEventListener("storage", checkAuth);
+    return () => window.removeEventListener("storage", checkAuth);
+  }, []);
 
   const closeModal = () => setModal(null);
+
+  const handleLoginSuccess = () => {
+    setIsAuth(true);
+    setModal(null);
+
+    const email = localStorage.getItem("userEmail");
+    if (email) {
+      setUserData({
+        email: email,
+        displayName: getNameFromEmail(email),
+      });
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userEmail");
+    setIsAuth(false);
+    setUserData(null);
+    setUserMenuOpen(false);
+    router.push("/");
+  };
+
+  const navigateToProfile = () => {
+    setUserMenuOpen(false);
+    router.push("/profile");
+  };
 
   return (
     <>
@@ -136,9 +209,78 @@ export default function Header() {
             </p>
           </div>
 
-          <button onClick={() => setModal("login")} className={styles.navLink}>
-            Войти
-          </button>
+          {isAuth && userData ? (
+            <div className={styles.userMenu}>
+              <button
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className={styles.userButton}
+              >
+                <div className={styles.avatar}>
+                  <svg
+                    width="50"
+                    height="50"
+                    viewBox="0 0 50 50"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M45.8334 25.0001C45.8334 36.506 36.506 45.8334 25.0001 45.8334C13.4941 45.8334 4.16675 36.506 4.16675 25.0001C4.16675 13.4941 13.4941 4.16675 25.0001 4.16675C36.506 4.16675 45.8334 13.4941 45.8334 25.0001ZM37.5001 32.4406C37.5001 35.8923 31.9036 39.5834 25.0001 39.5834C18.0965 39.5834 12.5001 35.8923 12.5001 32.4406C12.5001 28.9888 18.0965 27.0834 25.0001 27.0834C31.9036 27.0834 37.5001 28.9888 37.5001 32.4406ZM25.0001 22.9167C28.4519 22.9167 31.2501 20.1185 31.2501 16.6667C31.2501 13.215 28.4519 10.4167 25.0001 10.4167C21.5483 10.4167 18.7501 13.215 18.7501 16.6667C18.7501 20.1185 21.5483 22.9167 25.0001 22.9167Z"
+                      fill="#D9D9D9"
+                    />
+                  </svg>
+                </div>
+                <span className={styles.userName}>{userData.displayName}</span>
+                <svg
+                  width="13"
+                  height="8"
+                  viewBox="0 0 13 8"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12.0624 0.707154L6.38477 6.38477L0.707152 0.707154"
+                    stroke="black"
+                    strokeWidth="2"
+                  />
+                </svg>
+              </button>
+
+              {userMenuOpen && (
+                <div className={styles.dropdown}>
+                  <div className={styles.userInfo}>
+                    <div className={styles.userInfoName}>
+                      {userData.displayName}
+                    </div>
+                    <div className={styles.userEmail}>{userData.email}</div>
+                  </div>
+
+                  <div className={styles.userMenuItems}>
+                    <button
+                      onClick={navigateToProfile}
+                      className={styles.dropdownItemProfile}
+                    >
+                      Мой профиль
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className={styles.dropdownItemExit}
+                    >
+                      Выйти
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={() => setModal("login")}
+              className={styles.navLink}
+            >
+              Войти
+            </button>
+          )}
         </div>
       </header>
 
@@ -151,7 +293,11 @@ export default function Header() {
             <button className={styles.closeButton} onClick={closeModal}>
               ×
             </button>
-            <LoginPage onSwitchToRegister={() => setModal("register")} />
+            <LoginPage
+              onSwitchToRegister={() => setModal("register")}
+              onClose={closeModal}
+              onSuccess={handleLoginSuccess}
+            />
           </div>
         </div>
       )}
@@ -165,7 +311,11 @@ export default function Header() {
             <button className={styles.closeButton} onClick={closeModal}>
               ×
             </button>
-            <RegisterPage onSwitchToLogin={() => setModal("login")} />
+            <RegisterPage
+              onSwitchToLogin={() => setModal("login")}
+              onClose={closeModal}
+              onSuccess={handleLoginSuccess}
+            />
           </div>
         </div>
       )}

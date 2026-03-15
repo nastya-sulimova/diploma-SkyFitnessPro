@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login, register, LoginData, RegisterData } from "@/api/auth";
 
-export function useAuth() {
+export function useAuth(onSuccess?: () => void) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -17,8 +17,13 @@ export function useAuth() {
       const response = await login(data);
 
       localStorage.setItem("token", response.token);
+      localStorage.setItem("userEmail", data.email);
 
-      router.push("/profile");
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push("/profile");
+      }
 
       return response;
     } catch (err) {
@@ -37,8 +42,13 @@ export function useAuth() {
       const response = await register(data);
 
       localStorage.setItem("token", response.token);
+      localStorage.setItem("userEmail", data.email);
 
-      router.push("/profile");
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push("/profile");
+      }
 
       return response;
     } catch (err) {
@@ -51,6 +61,7 @@ export function useAuth() {
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userEmail");
     router.push("/");
   };
 

@@ -76,12 +76,6 @@
     color: white;
   }
 
-  .loginButton_inactive {
-    background: #F7F7F7;
-    color: #999999;
-    outline: none;
-  }
-
   .registerButton {
     border-radius: 46px;
     padding: 16px 26px;
@@ -124,9 +118,8 @@
   
   .loginButton:disabled,
   .registerButton:disabled {
-    background: transparent;
-    background: #999999;
-    border: 1px solid #999999;
-    cursor: not-allowed;
+    background: #F7F7F7;
+    color: #999999;
+    outline: none;
   }
   

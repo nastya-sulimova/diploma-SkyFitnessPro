@@ -7,11 +7,12 @@ import styles from "./page.module.css";
 interface RegisterPageProps {
   onSwitchToLogin?: () => void;
   onClose?: () => void;
+  onSuccess?: () => void;
 }
 
 export default function RegisterPage({
   onSwitchToLogin,
-  onClose,
+  onSuccess,
 }: RegisterPageProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +23,7 @@ export default function RegisterPage({
     confirmPassword?: string;
   }>({});
 
-  const { handleRegister, loading, error } = useAuth();
+  const { handleRegister, loading, error } = useAuth(onSuccess);
 
   const validateForm = () => {
     const newErrors: typeof errors = {};
@@ -61,7 +62,6 @@ export default function RegisterPage({
 
     try {
       await handleRegister({ email, password });
-      if (onClose) onClose();
     } catch (err) {}
   };
 

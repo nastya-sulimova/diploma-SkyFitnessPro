@@ -7,11 +7,12 @@ import styles from "./page.module.css";
 interface LoginPageProps {
   onSwitchToRegister?: () => void;
   onClose?: () => void;
+  onSuccess?: () => void;
 }
 
 export default function LoginPage({
   onSwitchToRegister,
-  onClose,
+  onSuccess,
 }: LoginPageProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,7 +20,7 @@ export default function LoginPage({
     {}
   );
 
-  const { handleLogin, loading, error } = useAuth();
+  const { handleLogin, loading, error } = useAuth(onSuccess);
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -40,12 +41,10 @@ export default function LoginPage({
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     try {
       await handleLogin({ email, password });
-      if (onClose) onClose();
     } catch (err) {}
   };
 

@@ -97,3 +97,136 @@
     background: #f5f5f5;
     color: #000;
   }
+
+  .userMenu {
+    position: relative;
+  }
+  
+  .userButton {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 40px;
+    transition: background-color 0.2s ease;
+    margin-bottom: 24px;
+  }
+  
+  .userButton:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 16px;
+    color: #000;
+  }
+  
+  .userName {
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 110%;
+    letter-spacing: 0px;
+    text-align: right;
+    color: #000;
+  }
+  
+  .arrow {
+    transition: transform 0.2s ease;
+  }
+  
+  .arrowUp {
+    transform: rotate(180deg);
+  }
+  
+  .dropdown {
+    position: absolute;
+    right: 0;
+    background-color: white;
+    overflow: hidden;
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: 0px 4px 67px -12px #00000021;
+  }
+  
+  .userInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 34px;
+  }
+
+  .userInfoName {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 110%;
+    color: black;
+  }
+  
+  .userEmail {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 110%;
+    color: #999999;
+  }
+
+  .userMenuItems {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .dropdownItemProfile {
+    border-radius: 46px;
+    padding: 16px 26px;
+    background-color: #BCEC30;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 110%;
+    letter-spacing: 0px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .dropdownItemProfile:hover {
+    background: #C6FF00;
+  }
+
+  .dropdownItemProfile:active {
+    background: black;
+    color: white;
+  }
+
+  .dropdownItemExit {
+    border-radius: 46px;
+    padding: 16px 26px;
+    background-color: transparent;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 110%;
+    letter-spacing: 0px;
+    border: 1px solid #000000;
+    cursor: pointer;
+  }
+  
+  .dropdownItemExit:hover {
+    background: #F7F7F7;
+  }
+
+  .dropdownItemExit:active {
+    background: #E9ECED;
+  }
+  
+  .dropdownItemProfile:disabled,
+  .dropdownItemExit:disabled {
+    background: #F7F7F7;
+    color: #999999;
+    outline: none;
+  }
