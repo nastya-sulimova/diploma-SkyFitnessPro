@@ -1,4 +1,3 @@
-import Header from "@/components/Header/Header";
 import CourseList from "@/components/CourseList/CourseList";
 import ScrollTopButton from "@/components/ScrollTopButton/ScrollTopButton";
 import styles from "./page.module.css";
@@ -6,7 +5,6 @@ import styles from "./page.module.css";
 export default function Home() {
   return (
     <>
-      <Header />
       <main className={styles.main}>
         <div className={styles.titles}>
           <h1 className={styles.heroSubtitle}>
