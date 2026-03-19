@@ -1,0 +1,231 @@
+  .container {
+    max-width: 1200px;
+    margin: 60px auto 0;
+  }
+  
+  .title {
+    font-weight: 500;
+    font-size: 60px;
+    line-height: 110%;
+    color: white;
+    position: absolute;
+    top: 40px;
+    left: 40px;
+  }
+
+  .sectionFitting {
+    margin: 60px 0;
+  }
+  
+  .sectionTitle {
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 110%;
+    color: black;
+    margin-bottom: 40px;
+  }
+  
+  .list {   
+    counter-reset: my-counter;
+    list-style-type: none;
+    padding-left: 0;
+    display: flex;
+    gap: 17px;
+  }
+  
+  .list li {
+    counter-increment: my-counter;
+    border-radius: 28px;
+    padding: 20px;
+    background: linear-gradient(115.81deg, #151720 34.98%, #1E212E 91.5%);
+    display: flex;
+    gap: 25px;
+    align-items: center;
+  }
+  
+  .list li::before {
+    content: counter(my-counter) " ";
+    font-weight: 500;
+    font-size: 75px;
+    line-height: 135%;
+    color: #BCEC30;
+  }
+  
+  .list p {
+    color: white;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 110%;
+  }
+
+  .directions {   
+    border-radius: 28px;
+    padding: 30px;
+    background: #BCEC30;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 34px;
+    justify-content: space-between;
+  }
+
+  .direction {   
+    display: flex;
+    gap: 8px;
+    height: min-content;
+    align-items: center;
+    width: 284px;
+  }
+
+  .direction p {   
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 110%;
+    color: black;
+  }
+
+  .commonDescription {
+    position: relative;  
+    overflow: hidden;
+    height: 602px;
+    margin-bottom: 50px;
+  }
+
+  .commonBlock {
+    position: relative;
+    margin-top: 102px;
+    margin-bottom: 50px;
+    background-color: white;
+    border-radius: 30px;
+    display: flex;
+  }
+  
+  .commonBlock::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 30px;
+    box-shadow: 0px 4px 67px -12px #00000021;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .commonBlockText {   
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 40px 0 40px 40px;
+    width: 475px;
+  }
+
+  .commonBlockTitle {   
+    font-weight: 500;
+    font-size: 60px;
+    line-height: 100%;
+    vertical-align: middle;
+    color: black;
+  }
+
+  .commonBlockList {   
+    list-style-type: disc;
+    margin-left: 30px;
+  }
+
+  .commonBlockItem {   
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 110%;
+    vertical-align: middle;
+    color: gray;
+    margin-bottom: 12px;
+  }
+
+  .commonBlockItem::marker {   
+    font-size: 0.6em;
+  }
+
+  .commonBlockBtn {   
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 110%;
+    color: black;
+    background: #BCEC30;
+    padding: 16px 26px;
+    border-radius: 46px;
+  }
+
+  .courseCommonImage{
+    position: absolute;
+    top: -90px;
+    right: -20px;
+  }
+
+
+
+
+
+
+
+
+
+
+  
+  .workoutsList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .workoutCard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+  
+  .workoutCard:hover {
+    background-color: #f0f1f2;
+  }
+  
+  .workoutNumber {
+    font-size: 16px;
+    font-weight: 500;
+    color: #1a1a1a;
+  }
+  
+  .startButton {
+    background-color: #BCEC30;
+    color: #000;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .startButton:hover {
+    background-color: #C6FF00;
+    transform: scale(1.05);
+  }
+  
+  .imageWrapper {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 30px;
+  }
+  
+  .courseImage {
+    object-fit: cover;
+    object-position: right center; 
+    position: relative;
+  }
+  

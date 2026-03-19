@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import styles from "./courseCard.module.css";
+import { useRouter } from "next/navigation";
 
 interface CourseCardProps {
   id: string;
@@ -11,12 +14,19 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({
+  id,
   title,
   imageSrc,
   duration,
   dailyTime,
   difficulty,
 }: CourseCardProps) {
+  const router = useRouter();
+
+  const handleCourseClick = () => {
+    router.push(`/courses/${id}`);
+  };
+
   return (
     <div className={styles.card}>
       <div className={styles.imageContainer}>
@@ -29,7 +39,7 @@ export default function CourseCard({
           loading="eager"
           style={{}}
         />
-        <button className={styles.addCourseBtn}>
+        <button className={styles.addCourseBtn} onClick={handleCourseClick}>
           <svg
             width="32"
             height="32"
@@ -91,7 +101,7 @@ export default function CourseCard({
 
             <span className={styles.infoText}>{dailyTime}</span>
           </div>
-          
+
           <div className={styles.infoItem}>
             <svg
               width="18"
