@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import styles from "./courseCard.module.css";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface CourseCardProps {
   id: string;
@@ -11,12 +15,20 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({
+  id,
   title,
   imageSrc,
   duration,
   dailyTime,
   difficulty,
 }: CourseCardProps) {
+  const router = useRouter();
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const handleCourseClick = () => {
+    router.push(`/courses/${id}`);
+  };
+
   return (
     <div className={styles.card}>
       <div className={styles.imageContainer}>
@@ -29,22 +41,29 @@ export default function CourseCard({
           loading="eager"
           style={{}}
         />
-        <button className={styles.addCourseBtn}>
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 32 32"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M16 29.3333C23.3638 29.3333 29.3333 23.3638 29.3333 16C29.3333 8.63616 23.3638 2.66663 16 2.66663C8.63619 2.66663 2.66666 8.63616 2.66666 16C2.66666 23.3638 8.63619 29.3333 16 29.3333ZM14.6667 14.6666V9.33329H17.3333V14.6666H22.6667V17.3333H17.3333V22.6666H14.6667V17.3333H9.33332V14.6666H14.6667Z"
-              fill="white"
-            />
-          </svg>
-        </button>
+        <div
+          className={styles.addCourseBtnWrapper}
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          <button className={styles.addCourseBtn} onClick={handleCourseClick}>
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 32 32"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M16 29.3333C23.3638 29.3333 29.3333 23.3638 29.3333 16C29.3333 8.63616 23.3638 2.66663 16 2.66663C8.63619 2.66663 2.66666 8.63616 2.66666 16C2.66666 23.3638 8.63619 29.3333 16 29.3333ZM14.6667 14.6666V9.33329H17.3333V14.6666H22.6667V17.3333H17.3333V22.6666H14.6667V17.3333H9.33332V14.6666H14.6667Z"
+                fill="white"
+              />
+            </svg>
+          </button>
+          {showTooltip && <div className={styles.tooltip}>Добавить курс</div>}
+        </div>
       </div>
 
       <div className={styles.content}>
@@ -91,7 +110,7 @@ export default function CourseCard({
 
             <span className={styles.infoText}>{dailyTime}</span>
           </div>
-          
+
           <div className={styles.infoItem}>
             <svg
               width="18"

@@ -15,3 +15,11 @@ export const COURSE_IMAGES: Record<string, string> = {
   StepAirobic: "/img/courses/step.jpg",
   BodyFlex: "/img/courses/bodyflex.jpg",
 };
+
+export const COURSE_PAGE_IMAGES: Record<string, string> = {
+  Yoga: "/img/coursesId/yogaItem.png",
+  Stretching: "/img/coursesId/stretchingItem.png",
+  Fitness: "/img/coursesId/fitnessItem.png",
+  StepAirobic: "/img/coursesId/stepItem.png",
+  BodyFlex: "/img/coursesId/bodyflexItem.png",
+};

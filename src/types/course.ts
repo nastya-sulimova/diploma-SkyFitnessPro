@@ -3,6 +3,8 @@ export interface Course {
   nameRU: string;
   nameEN: string;
   description?: string;
+  directions?: [];
+  fitting?: [];
   durationInDays: number;
   dailyDurationInMinutes: {
     from: number;
