@@ -32,16 +32,10 @@ export default function Header() {
 
       if (auth) {
         const email = localStorage.getItem("userEmail");
-
         if (email) {
           setUserData({
             email: email,
             displayName: getNameFromEmail(email),
-          });
-        } else {
-          setUserData({
-            email: "Пользователь",
-            displayName: "Пользователь",
           });
         }
       } else {
@@ -52,7 +46,12 @@ export default function Header() {
     checkAuth();
 
     window.addEventListener("storage", checkAuth);
-    return () => window.removeEventListener("storage", checkAuth);
+    window.addEventListener("authChange", checkAuth);
+
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+      window.removeEventListener("authChange", checkAuth);
+    };
   }, []);
 
   const closeModal = () => setModal(null);

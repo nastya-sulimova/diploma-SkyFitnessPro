@@ -19,6 +19,9 @@ export function useAuth(onSuccess?: () => void) {
       localStorage.setItem("token", response.token);
       localStorage.setItem("userEmail", data.email);
 
+      // Диспатчим событие, чтобы обновить UI
+      window.dispatchEvent(new Event("authChange"));
+
       if (onSuccess) {
         onSuccess();
       } else {
@@ -44,6 +47,9 @@ export function useAuth(onSuccess?: () => void) {
       localStorage.setItem("token", response.token);
       localStorage.setItem("userEmail", data.email);
 
+      // Диспатчим событие, чтобы обновить UI
+      window.dispatchEvent(new Event("authChange"));
+
       if (onSuccess) {
         onSuccess();
       } else {
@@ -62,6 +68,7 @@ export function useAuth(onSuccess?: () => void) {
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userEmail");
+    window.dispatchEvent(new Event("authChange"));
     router.push("/");
   };
 
