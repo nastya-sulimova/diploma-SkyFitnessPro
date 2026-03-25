@@ -19,7 +19,6 @@ export function useAuth(onSuccess?: () => void) {
       localStorage.setItem("token", response.token);
       localStorage.setItem("userEmail", data.email);
 
-      // Диспатчим событие, чтобы обновить UI
       window.dispatchEvent(new Event("authChange"));
 
       if (onSuccess) {
@@ -47,7 +46,8 @@ export function useAuth(onSuccess?: () => void) {
       localStorage.setItem("token", response.token);
       localStorage.setItem("userEmail", data.email);
 
-      // Диспатчим событие, чтобы обновить UI
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("userEmail", data.email);
       window.dispatchEvent(new Event("authChange"));
 
       if (onSuccess) {
