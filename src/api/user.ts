@@ -26,7 +26,6 @@ export async function getUserData(): Promise<UserData> {
   }
 
   const data = await res.json();
-  console.log("User data from API:", data);
 
   return {
     email: data.user.email,

@@ -6,11 +6,10 @@ import Image from "next/image";
 import { fetchCourseById } from "@/api/courses";
 import { COURSE_PAGE_IMAGES } from "@/utils/constants";
 import { useUserCourses } from "@/hooks/useUserCourses";
-import { useParams } from "next/navigation"; // Добавляем useParams
+import { useParams } from "next/navigation";
 import styles from "./page.module.css";
 
 export default function CoursePage() {
-  // Получаем params через хук useParams (это работает в клиентских компонентах)
   const params = useParams();
   const courseId = params.courseId as string;
 
@@ -23,7 +22,6 @@ export default function CoursePage() {
   const { isAuthenticated, isCourseAdded, addCourse } =
     useUserCourses(courseId);
 
-  // Загружаем курс
   useEffect(() => {
     const loadCourse = async () => {
       if (!courseId) return;
@@ -82,7 +80,6 @@ export default function CoursePage() {
         />
         <h1 className={styles.title}>{course.nameRU}</h1>
       </div>
-
       {course.fitting && course.fitting.length > 0 && (
         <div className={styles.sectionFitting}>
           <h2 className={styles.sectionTitle}>Подойдет для вас, если:</h2>
@@ -95,7 +92,6 @@ export default function CoursePage() {
           </ul>
         </div>
       )}
-
       {course.directions && course.directions.length > 0 && (
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>Направления</h2>
@@ -120,7 +116,6 @@ export default function CoursePage() {
           </div>
         </div>
       )}
-
       <div className={styles.commonDescription}>
         <div className={styles.commonBlock}>
           <div className={styles.commonBlockText}>
@@ -157,14 +152,31 @@ export default function CoursePage() {
         </div>
       </div>
 
-      {isCourseAdded && course.workouts && course.workouts.length > 0 && (
+      {course.workouts && course.workouts.length > 0 && (
         <div ref={workoutsRef} className={styles.section}>
           <h2 className={styles.sectionTitle}>Тренировки</h2>
           <div className={styles.workoutsList}>
             {course.workouts.map((workoutId: string, index: number) => (
               <div key={workoutId} className={styles.workoutCard}>
-                <span className={styles.workoutNumber}>Урок {index + 1}</span>
-                <button className={styles.startButton}>Начать</button>
+                <span className={styles.workoutNumber}>
+                  Тренировка {index + 1}
+                </span>
+                <button
+                  className={styles.startButton}
+                  onClick={() => {
+                    sessionStorage.setItem(
+                      `courseName_${courseId}`,
+                      course.nameRU
+                    );
+                    sessionStorage.setItem(
+                      `workoutNumber_${workoutId}`,
+                      String(index + 1)
+                    );
+                    router.push(`/workouts/${workoutId}?courseId=${courseId}`);
+                  }}
+                >
+                  Начать
+                </button>
               </div>
             ))}
           </div>

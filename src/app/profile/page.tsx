@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { getUserData } from "@/api/user";
 import { fetchCourseById } from "@/api/courses";
+import { getCourseProgress, getCachedWorkout } from "@/api/workouts";
 import { Course, difficultyMap } from "@/types/course";
 import { getToken } from "@/utils/auth";
 import { getNameFromEmail } from "@/utils/user";
@@ -11,10 +12,14 @@ import styles from "./page.module.css";
 import CourseCard from "@/components/CourseCard/CourseCard";
 import { COURSE_IMAGES } from "@/utils/constants";
 
+interface CourseWithProgress extends Course {
+  progress: number;
+}
+
 export default function ProfilePage() {
   const [userEmail, setUserEmail] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [courses, setCourses] = useState<CourseWithProgress[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -48,7 +53,73 @@ export default function ProfilePage() {
       );
 
       const loadedCourses = await Promise.all(coursePromises);
-      setCourses(loadedCourses.filter((c): c is Course => c !== null));
+      const validCourses = loadedCourses.filter((c): c is Course => c !== null);
+
+      const coursesWithProgress = await Promise.all(
+        validCourses.map(async (course) => {
+          try {
+            const progress = await getCourseProgress(course._id);
+            const workoutsProgress = progress.workoutsProgress || [];
+
+            let totalPercent = 0;
+            let totalPossible = 0;
+
+            if (course.workouts && course.workouts.length > 0) {
+              for (const workoutId of course.workouts) {
+                const workout = await getCachedWorkout(workoutId);
+
+                if (
+                  workout &&
+                  workout.exercises &&
+                  workout.exercises.length > 0
+                ) {
+                  const exercisesCount = workout.exercises.length;
+
+                  const workoutProgress = workoutsProgress.find(
+                    (wp: any) => wp.workoutId === workoutId
+                  );
+
+                  if (workoutProgress && workoutProgress.progressData) {
+                    for (let i = 0; i < exercisesCount; i++) {
+                      const completedValue =
+                        workoutProgress.progressData[i] || 0;
+                      const targetValue = workout.exercises[i]?.quantity || 0;
+
+                      if (targetValue > 0) {
+                        const percent = Math.min(
+                          completedValue / targetValue,
+                          1
+                        );
+                        totalPercent += percent;
+                        totalPossible += 1;
+                      }
+                    }
+                  } else {
+                    for (let i = 0; i < exercisesCount; i++) {
+                      totalPossible += 1;
+                    }
+                  }
+                }
+              }
+            }
+
+            const percent =
+              totalPossible > 0
+                ? Math.round((totalPercent / totalPossible) * 100)
+                : 0;
+
+            return { ...course, progress: percent };
+          } catch (err) {
+            console.error(
+              `Error loading progress for course ${course._id}:`,
+              err
+            );
+            return { ...course, progress: 0 };
+          }
+        })
+      );
+
+      setCourses(coursesWithProgress);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ошибка загрузки профиля");
     } finally {
@@ -138,7 +209,7 @@ export default function ProfilePage() {
                 onCourseRemoved={() => {
                   loadProfile();
                 }}
-                progress={0}
+                progress={course.progress}
               />
             ))}
           </div>

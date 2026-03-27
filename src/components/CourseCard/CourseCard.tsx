@@ -69,8 +69,6 @@ export default function CourseCard({
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           loading="eager"
         />
-
-        {/* Кнопка добавления/удаления курса */}
         <div
           className={styles.addCourseBtnWrapper}
           onMouseEnter={() => setShowTooltip(true)}
@@ -82,7 +80,6 @@ export default function CourseCard({
             disabled={isProfile && isDeleting}
           >
             {isProfile ? (
-              // Минусик для страницы профиля
               <svg
                 width="32"
                 height="32"
@@ -98,7 +95,6 @@ export default function CourseCard({
                 />
               </svg>
             ) : (
-              // Плюсик для главной страницы
               <svg
                 width="32"
                 height="32"
@@ -218,22 +214,18 @@ export default function CourseCard({
         </div>
 
         {isProfile && (
-          <>
-            <div className={styles.profileSection}>
-              <div className={styles.progressText}>Прогресс: {progress}%</div>
-
-              <div className={styles.progressBar}>
-                <div
-                  className={styles.progressFill}
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
+          <div className={styles.profileSection}>
+            <div className={styles.progressText}>Прогресс: {progress}%</div>
+            <div className={styles.progressBar}>
+              <div
+                className={styles.progressFill}
+                style={{ width: `${progress}%` }}
+              />
             </div>
-
             <button className={styles.actionButton} onClick={handleCourseClick}>
               {getActionButtonText()}
             </button>
-          </>
+          </div>
         )}
       </div>
     </div>
