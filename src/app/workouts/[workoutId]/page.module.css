@@ -1,0 +1,176 @@
+.container {
+    min-height: 100vh;
+    background-color: #f9fafb;
+    margin-top: 60px;
+  }
+  
+  .wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .courseTitle {
+    font-weight: 500;
+    font-size: 60px;
+    line-height: 100%; 
+    color: black;
+    margin-bottom: 40px;
+  }
+  
+  .videoWrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    border-radius: 30px;
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+  
+  .videoWrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .exercisesSection {
+    background-color: white;
+    border-radius: 30px;
+    padding: 40px;
+    box-shadow: 0px 4px 67px -12px #00000021;
+    margin-bottom: 60px;
+  }
+  
+  .sectionTitle {
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 110%;
+    color: black;
+    margin-bottom: 20px;
+  }
+  
+  .exercisesList {
+    margin-bottom: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 60px;
+    align-items: end;
+  }
+  
+  .exerciseCard {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .exerciseHeader {
+    margin-bottom: 10px;
+  }
+
+  .exerciseName {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 110.00000000000001%;
+    color: black;
+  }
+  
+  .exercisePercentage {
+    font-size: 14px;
+    font-weight: 500;
+    color: #BCEC30;
+    background-color: #1a1a1a;
+    padding: 4px 8px;
+    border-radius: 20px;
+  }
+  
+  .progressBar {
+    width: 100%;
+    height: 8px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .progressFill {
+    height: 100%;
+    background-color: #00C1FF;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+
+  .saveButton {
+    background-color: #BCEC30;
+    padding: 16px 26px;
+    border-radius: 46px;
+    color: #000;
+    font-size: 18px;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  
+  .saveButton:hover {
+    background-color: #C6FF00;
+  }
+  
+  .saveButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  .exerciseInfo {
+    margin-bottom: 16px;
+  }
+  
+ 
+  
+  .exerciseTarget {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .exerciseProgress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  
+  .exerciseProgress label {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .quantityInput {
+    width: 100px;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  .quantityInput:focus {
+    outline: none;
+    border-color: #BCEC30;
+  }
+  
+  .quantityTarget {
+    font-size: 14px;
+    color: #666;
+  }
+  
+
+

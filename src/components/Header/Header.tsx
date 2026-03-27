@@ -8,12 +8,7 @@ import styles from "./header.module.css";
 import LoginPage from "@/app/login/page";
 import RegisterPage from "@/app/register/page";
 import { isAuthenticated, getToken } from "@/utils/auth";
-
-const getNameFromEmail = (email: string): string => {
-  if (!email) return "Пользователь";
-  const namePart = email.split("@")[0];
-  return namePart.charAt(0).toUpperCase() + namePart.slice(1).toLowerCase();
-};
+import { getNameFromEmail } from "@/utils/user";
 
 export default function Header() {
   const [modal, setModal] = useState<null | "login" | "register">(null);

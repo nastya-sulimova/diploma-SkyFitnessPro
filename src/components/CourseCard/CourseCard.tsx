@@ -4,6 +4,7 @@ import Image from "next/image";
 import styles from "./courseCard.module.css";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { removeCourse } from "@/api/user";
 
 interface CourseCardProps {
   id: string;
@@ -12,6 +13,9 @@ interface CourseCardProps {
   duration: string;
   dailyTime: string;
   difficulty: string;
+  isProfile?: boolean;
+  onCourseRemoved?: () => void;
+  progress?: number;
 }
 
 export default function CourseCard({
@@ -21,12 +25,37 @@ export default function CourseCard({
   duration,
   dailyTime,
   difficulty,
+  isProfile = false,
+  onCourseRemoved,
+  progress = 0,
 }: CourseCardProps) {
   const router = useRouter();
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleCourseClick = () => {
     router.push(`/courses/${id}`);
+  };
+
+  const handleRemoveCourse = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isDeleting) return;
+
+    setIsDeleting(true);
+    try {
+      await removeCourse(id);
+      onCourseRemoved?.();
+    } catch (error) {
+      console.error("Error removing course:", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const getActionButtonText = () => {
+    if (progress === 0) return "Начать тренировки";
+    if (progress === 100) return "Начать заново";
+    return "Продолжить";
   };
 
   return (
@@ -39,30 +68,54 @@ export default function CourseCard({
           className={styles.image}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           loading="eager"
-          style={{}}
         />
         <div
           className={styles.addCourseBtnWrapper}
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
         >
-          <button className={styles.addCourseBtn} onClick={handleCourseClick}>
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 32 32"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M16 29.3333C23.3638 29.3333 29.3333 23.3638 29.3333 16C29.3333 8.63616 23.3638 2.66663 16 2.66663C8.63619 2.66663 2.66666 8.63616 2.66666 16C2.66666 23.3638 8.63619 29.3333 16 29.3333ZM14.6667 14.6666V9.33329H17.3333V14.6666H22.6667V17.3333H17.3333V22.6666H14.6667V17.3333H9.33332V14.6666H14.6667Z"
-                fill="white"
-              />
-            </svg>
+          <button
+            className={styles.addCourseBtn}
+            onClick={isProfile ? handleRemoveCourse : handleCourseClick}
+            disabled={isProfile && isDeleting}
+          >
+            {isProfile ? (
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M16 29.3333C23.3638 29.3333 29.3333 23.3638 29.3333 16C29.3333 8.63616 23.3638 2.66663 16 2.66663C8.63619 2.66663 2.66666 8.63616 2.66666 16C2.66666 23.3638 8.63619 29.3333 16 29.3333ZM9.33333 14.6666H22.6667V17.3333H9.33333V14.6666Z"
+                  fill="white"
+                />
+              </svg>
+            ) : (
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M16 29.3333C23.3638 29.3333 29.3333 23.3638 29.3333 16C29.3333 8.63616 23.3638 2.66663 16 2.66663C8.63619 2.66663 2.66666 8.63616 2.66666 16C2.66666 23.3638 8.63619 29.3333 16 29.3333ZM14.6667 14.6666V9.33329H17.3333V14.6666H22.6667V17.3333H17.3333V22.6666H14.6667V17.3333H9.33332V14.6666H14.6667Z"
+                  fill="white"
+                />
+              </svg>
+            )}
           </button>
-          {showTooltip && <div className={styles.tooltip}>Добавить курс</div>}
+          {showTooltip && (
+            <div className={styles.tooltip}>
+              {isProfile ? "Удалить курс" : "Добавить курс"}
+            </div>
+          )}
         </div>
       </div>
 
@@ -107,7 +160,6 @@ export default function CourseCard({
                 fill="#202020"
               />
             </svg>
-
             <span className={styles.infoText}>{dailyTime}</span>
           </div>
 
@@ -157,10 +209,24 @@ export default function CourseCard({
                 </clipPath>
               </defs>
             </svg>
-
             <span className={styles.infoText}>{difficulty}</span>
           </div>
         </div>
+
+        {isProfile && (
+          <div className={styles.profileSection}>
+            <div className={styles.progressText}>Прогресс: {progress}%</div>
+            <div className={styles.progressBar}>
+              <div
+                className={styles.progressFill}
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <button className={styles.actionButton} onClick={handleCourseClick}>
+              {getActionButtonText()}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
