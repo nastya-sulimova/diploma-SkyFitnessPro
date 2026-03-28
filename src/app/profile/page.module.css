@@ -7,6 +7,7 @@
 .wrapper {
   max-width: 1200px;
   margin: 0 auto;
+  margin-bottom: 24px;
 }
 
 .title {
@@ -76,7 +77,7 @@
 
 .coursesList {
   display: flex;
-  gap: 40px;
+  gap: 59px;
 }
 
 .error {
@@ -84,4 +85,64 @@
   font-size: 18px;
   color: #ef4444;
   padding: 40px;
+}
+
+@media (max-width: 376px) {
+  .container {
+    padding: 40px 16px;
+  }
+
+  .title {
+    font-weight: 500;
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .userInfo {
+    margin-bottom: 24px;
+  }
+
+  .infoItem {
+    gap: 30px;
+    flex-direction: column;
+  }
+
+  .photo {
+    display: flex;
+    justify-content: center;
+  }
+
+  .photoMobile {
+    width: 141px;
+    height: 141px;
+  }
+
+  .infoBlock {
+    gap: 20px;
+  }
+
+  .userData {
+    gap: 20px;
+  }
+
+  .userName {
+    font-size: 24px;
+  }
+
+  .userEmail {
+    font-size: 16px;
+  }
+
+  .exitBtn {
+    font-size: 16px;
+  }
+
+  .coursesList {
+    gap: 24px;
+    flex-direction: column;
+  }
+
+  .wrapper {
+    margin-bottom: 24px;
+  }
 }

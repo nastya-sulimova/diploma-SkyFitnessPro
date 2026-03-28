@@ -31,3 +31,14 @@
     color: black;
     margin-bottom: 34px;
   }
+
+  @media (max-width: 376px) {
+    .notification {
+        margin: 0 16px;
+      }
+
+      .message {
+        font-size: 32px;
+        font-weight: 400;
+      }
+  }
