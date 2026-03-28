@@ -59,7 +59,6 @@
   }
   
   .exerciseCard {
-    cursor: pointer;
     transition: background-color 0.2s ease;
   }
 
@@ -170,6 +169,34 @@
   .quantityTarget {
     font-size: 14px;
     color: #666;
+  }
+
+
+  @media (max-width: 376px) {
+    .container {
+        margin: 40px 16px 0;
+      }
+
+      .courseTitle {
+        font-size: 24px;
+        margin-bottom: 24px;
+      }
+
+      .videoWrapper {
+        border-radius: 9px;
+        margin-bottom: 24px;
+      }
+
+      .exercisesSection {
+        padding: 30px;
+        margin-bottom: 40px;
+      }
+
+      .exercisesList {    
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
   }
   
 

@@ -11,6 +11,7 @@ import { getNameFromEmail } from "@/utils/user";
 import styles from "./page.module.css";
 import CourseCard from "@/components/CourseCard/CourseCard";
 import { COURSE_IMAGES } from "@/utils/constants";
+import ScrollTopButton from "@/components/ScrollTopButton/ScrollTopButton";
 
 interface CourseWithProgress extends Course {
   progress: number;
@@ -172,7 +173,11 @@ export default function ProfilePage() {
         <div className={styles.userInfo}>
           <div className={styles.infoItem}>
             <div className={styles.photo}>
-              <img src="/img/profilePhoto.png" alt="" />
+              <img
+                className={styles.photoMobile}
+                src="/img/profilePhoto.png"
+                alt=""
+              />
             </div>
             <div className={styles.infoBlock}>
               <div className={styles.userData}>
@@ -215,6 +220,8 @@ export default function ProfilePage() {
           </div>
         )}
       </div>
+
+      <ScrollTopButton />
     </main>
   );
 }

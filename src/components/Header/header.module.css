@@ -38,20 +38,10 @@
   .navLink {
     font-weight: 400;
     font-size: 18px;
-    line-height: 110.00000000000001%;
-    letter-spacing: 0px;
+    line-height: 110%;
     text-align: center;
-
-    width: 103;
-    height: 52;
-    top: 50px;
-    left: 1197px;
     border-radius: 46px;
-    padding-top: 16px;
-    padding-right: 26px;
-    padding-bottom: 16px;
-    padding-left: 26px;
-    gap: 8px;
+    padding: 16px 26px;
     opacity: 1;
     background: #BCEC30;
   }
@@ -113,10 +103,6 @@
     border-radius: 40px;
     transition: background-color 0.2s ease;
     margin-bottom: 24px;
-  }
-  
-  .userButton:hover {
-    background-color: #f5f5f5;
   }
   
   .avatar {
@@ -230,3 +216,36 @@
     color: #999999;
     outline: none;
   }
+
+  @media (max-width: 376px) {
+    .container {
+      margin: 40px 16px 0;
+    }
+
+    .logo_text {
+      display: none;
+    }
+
+    .navLink {
+      padding: 8px 16px;
+    }
+
+    .userName {
+      display: none;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+    }
+
+    .userButton {
+      gap: 10px;
+      padding: 0;
+      margin-bottom: 0;
+    }
+
+  }
+
+
+  

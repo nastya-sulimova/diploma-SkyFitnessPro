@@ -167,9 +167,23 @@
   font-size: 18px;
   font-weight: 400;
   cursor: pointer;
-  margin-top: 40px;
+  margin-top: 30px;
 }
 
 .actionButton:hover {
   background-color: #C6FF00;
+}
+
+@media (max-width: 376px) {
+  .content {
+    padding: 24px 21px 15px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .actionButton {
+    font-size: 16px;
+  }
 }

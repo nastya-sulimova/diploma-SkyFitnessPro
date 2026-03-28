@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { fetchCourseById } from "@/api/courses";
-import { COURSE_PAGE_IMAGES } from "@/utils/constants";
+import { getCachedWorkout } from "@/api/workouts";
+import { COURSE_PAGE_IMAGES, COURSE_IMAGES } from "@/utils/constants";
 import { useUserCourses } from "@/hooks/useUserCourses";
 import { useParams } from "next/navigation";
+import WorkoutModal from "@/components/WorkoutModal/WorkoutModal";
 import styles from "./page.module.css";
 
 export default function CoursePage() {
@@ -14,10 +16,13 @@ export default function CoursePage() {
   const courseId = params.courseId as string;
 
   const router = useRouter();
-  const workoutsRef = useRef<HTMLDivElement>(null);
 
   const [course, setCourse] = useState<any>(null);
+  const [workoutList, setWorkoutList] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
   const [loading, setLoading] = useState(true);
+  const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
 
   const { isAuthenticated, isCourseAdded, addCourse } =
     useUserCourses(courseId);
@@ -27,10 +32,29 @@ export default function CoursePage() {
       if (!courseId) return;
 
       try {
-        console.log("Loading course with ID:", courseId);
         const data = await fetchCourseById(courseId);
-        console.log("Course data:", data);
         setCourse(data);
+
+        if (data.workouts && data.workouts.length > 0) {
+          const workoutsWithNames = await Promise.all(
+            data.workouts.map(async (workoutId: string, index: number) => {
+              try {
+                const workout = await getCachedWorkout(workoutId);
+                return {
+                  id: workoutId,
+                  name: workout?.name || `Тренировка ${index + 1}`,
+                };
+              } catch (err) {
+                console.error(`Error loading workout ${workoutId}:`, err);
+                return {
+                  id: workoutId,
+                  name: `Тренировка ${index + 1}`,
+                };
+              }
+            })
+          );
+          setWorkoutList(workoutsWithNames);
+        }
       } catch (error) {
         console.error("Error loading course:", error);
       } finally {
@@ -44,15 +68,23 @@ export default function CoursePage() {
     if (!isAuthenticated) {
       router.push("/login");
     } else if (isCourseAdded) {
-      workoutsRef.current?.scrollIntoView({ behavior: "smooth" });
+      setIsWorkoutModalOpen(true);
     } else {
       addCourse();
     }
   };
 
+  const handleStartWorkout = (workoutId: string) => {
+    const index = course.workouts.findIndex((id: string) => id === workoutId);
+
+    sessionStorage.setItem(`courseName_${courseId}`, course.nameRU);
+    sessionStorage.setItem(`workoutNumber_${workoutId}`, String(index + 1));
+    router.push(`/workouts/${workoutId}?courseId=${courseId}`);
+  };
+
   const getButtonText = () => {
     if (!isAuthenticated) return "Войдите, чтобы добавить курс";
-    if (isCourseAdded) return "Перейти к тренировкам";
+    if (isCourseAdded) return "Выбрать тренировку";
     return "Добавить курс";
   };
 
@@ -66,6 +98,8 @@ export default function CoursePage() {
 
   const imageSrc =
     COURSE_PAGE_IMAGES[course.nameEN] || "/img/courses/default.jpg";
+  const imageSrcMobile =
+    COURSE_IMAGES[course.nameEN] || "/img/courses/default.jpg";
 
   return (
     <div className={styles.container}>
@@ -78,8 +112,17 @@ export default function CoursePage() {
           className={styles.courseImage}
           sizes="100vw"
         />
+        <Image
+          src={imageSrcMobile}
+          alt={course.nameRU}
+          fill
+          priority
+          className={styles.courseImageMobile}
+          sizes="100vw"
+        />
         <h1 className={styles.title}>{course.nameRU}</h1>
       </div>
+
       {course.fitting && course.fitting.length > 0 && (
         <div className={styles.sectionFitting}>
           <h2 className={styles.sectionTitle}>Подойдет для вас, если:</h2>
@@ -92,6 +135,7 @@ export default function CoursePage() {
           </ul>
         </div>
       )}
+
       {course.directions && course.directions.length > 0 && (
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>Направления</h2>
@@ -116,6 +160,7 @@ export default function CoursePage() {
           </div>
         </div>
       )}
+
       <div className={styles.commonDescription}>
         <div className={styles.commonBlock}>
           <div className={styles.commonBlockText}>
@@ -151,37 +196,18 @@ export default function CoursePage() {
           />
         </div>
       </div>
+      <img
+        className={styles.courseCommonImageMobile}
+        src="/img/coursesId/sportsman.png"
+        alt=""
+      />
 
-      {course.workouts && course.workouts.length > 0 && (
-        <div ref={workoutsRef} className={styles.section}>
-          <h2 className={styles.sectionTitle}>Тренировки</h2>
-          <div className={styles.workoutsList}>
-            {course.workouts.map((workoutId: string, index: number) => (
-              <div key={workoutId} className={styles.workoutCard}>
-                <span className={styles.workoutNumber}>
-                  Тренировка {index + 1}
-                </span>
-                <button
-                  className={styles.startButton}
-                  onClick={() => {
-                    sessionStorage.setItem(
-                      `courseName_${courseId}`,
-                      course.nameRU
-                    );
-                    sessionStorage.setItem(
-                      `workoutNumber_${workoutId}`,
-                      String(index + 1)
-                    );
-                    router.push(`/workouts/${workoutId}?courseId=${courseId}`);
-                  }}
-                >
-                  Начать
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <WorkoutModal
+        isOpen={isWorkoutModalOpen}
+        workouts={workoutList}
+        onClose={() => setIsWorkoutModalOpen(false)}
+        onStart={handleStartWorkout}
+      />
     </div>
   );
 }
