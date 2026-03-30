@@ -10,6 +10,8 @@ import { useUserCourses } from "@/hooks/useUserCourses";
 import { useParams } from "next/navigation";
 import WorkoutModal from "@/components/WorkoutModal/WorkoutModal";
 import styles from "./page.module.css";
+import LoginPage from "@/app/login/page";
+import RegisterPage from "@/app/register/page";
 
 export default function CoursePage() {
   const params = useParams();
@@ -23,6 +25,8 @@ export default function CoursePage() {
   >([]);
   const [loading, setLoading] = useState(true);
   const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   const { isAuthenticated, isCourseAdded, addCourse } =
     useUserCourses(courseId);
@@ -66,12 +70,28 @@ export default function CoursePage() {
 
   const handleButtonClick = () => {
     if (!isAuthenticated) {
-      router.push("/login");
+      setIsLoginModalOpen(true);
     } else if (isCourseAdded) {
       setIsWorkoutModalOpen(true);
     } else {
       addCourse();
     }
+  };
+
+  const handleSwitchToRegister = () => {
+    setIsLoginModalOpen(false);
+    setIsRegisterModalOpen(true);
+  };
+
+  const handleSwitchToLogin = () => {
+    setIsRegisterModalOpen(false);
+    setIsLoginModalOpen(true);
+  };
+
+  const handleAuthSuccess = () => {
+    setIsLoginModalOpen(false);
+    setIsRegisterModalOpen(false);
+    window.dispatchEvent(new Event("authChange"));
   };
 
   const handleStartWorkout = (workoutId: string) => {
@@ -208,6 +228,42 @@ export default function CoursePage() {
         onClose={() => setIsWorkoutModalOpen(false)}
         onStart={handleStartWorkout}
       />
+
+      {isLoginModalOpen && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setIsLoginModalOpen(false)}
+        >
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <LoginPage
+              onSwitchToRegister={handleSwitchToRegister}
+              onClose={() => setIsLoginModalOpen(false)}
+              onSuccess={handleAuthSuccess}
+            />
+          </div>
+        </div>
+      )}
+
+      {isRegisterModalOpen && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setIsRegisterModalOpen(false)}
+        >
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <RegisterPage
+              onSwitchToLogin={handleSwitchToLogin}
+              onClose={() => setIsRegisterModalOpen(false)}
+              onSuccess={handleAuthSuccess}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
