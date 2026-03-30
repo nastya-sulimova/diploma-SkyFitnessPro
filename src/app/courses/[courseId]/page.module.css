@@ -2,6 +2,14 @@
     max-width: 1200px;
     margin: 60px auto 0;
   }
+
+  .loading {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #4a4a4a;
+    padding: 40px;
+    grid-column: 1 / -1;
+  }
   
   .title {
     font-weight: 500;

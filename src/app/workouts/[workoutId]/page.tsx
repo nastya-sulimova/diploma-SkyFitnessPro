@@ -111,7 +111,7 @@ export default function WorkoutPage() {
   };
 
   if (loading) {
-    return <div className={styles.container}>Загрузка...</div>;
+    return <div className={styles.loading}>Загрузка...</div>;
   }
 
   if (error) {
