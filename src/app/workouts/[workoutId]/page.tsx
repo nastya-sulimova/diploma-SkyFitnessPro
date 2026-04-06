@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import {
+  Exercise,
   getWorkout,
   getWorkoutProgress,
   saveWorkoutProgress,
+  Workout,
 } from "@/api/workouts";
 import ExerciseModal from "@/components/ExerciseModal/ExerciseModal";
 import Notification from "@/components/Notification/Notification";
@@ -18,7 +20,7 @@ export default function WorkoutPage() {
   const workoutId = params.workoutId as string;
   const courseId = searchParams.get("courseId");
 
-  const [workout, setWorkout] = useState<any>(null);
+  const [workout, setWorkout] = useState<Workout | null>(null);
   const [progress, setProgress] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -79,7 +81,7 @@ export default function WorkoutPage() {
   }, [courseId, workoutId]);
 
   const handleSaveProgress = async (newProgress: number[]) => {
-    if (!courseId || !workoutId) return;
+    if (!workout || !courseId || !workoutId) return;
 
     const validatedProgress = [...newProgress];
     while (validatedProgress.length < workout.exercises.length) {
@@ -145,7 +147,7 @@ export default function WorkoutPage() {
           </h3>
 
           <div className={styles.exercisesList}>
-            {workout.exercises.map((exercise: any, index: number) => {
+            {workout.exercises.map((exercise: Exercise, index: number) => {
               const percentage = calculateProgressPercentage(
                 progress[index] || 0,
                 exercise.quantity

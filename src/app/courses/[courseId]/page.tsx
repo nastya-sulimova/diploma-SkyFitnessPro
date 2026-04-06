@@ -12,6 +12,7 @@ import WorkoutModal from "@/components/WorkoutModal/WorkoutModal";
 import styles from "./page.module.css";
 import LoginPage from "@/app/login/page";
 import RegisterPage from "@/app/register/page";
+import { Course } from "@/types/course";
 
 export default function CoursePage() {
   const params = useParams();
@@ -19,7 +20,7 @@ export default function CoursePage() {
 
   const router = useRouter();
 
-  const [course, setCourse] = useState<any>(null);
+  const [course, setCourse] = useState<Course | null>(null);
   const [workoutList, setWorkoutList] = useState<
     Array<{ id: string; name: string }>
   >([]);
@@ -95,6 +96,10 @@ export default function CoursePage() {
   };
 
   const handleStartWorkout = (workoutId: string) => {
+    if (!course || !course.workouts) {
+      return;
+    }
+
     const index = course.workouts.findIndex((id: string) => id === workoutId);
 
     sessionStorage.setItem(`courseName_${courseId}`, course.nameRU);

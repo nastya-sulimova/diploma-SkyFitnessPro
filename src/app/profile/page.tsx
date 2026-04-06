@@ -4,7 +4,11 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { getUserData } from "@/api/user";
 import { fetchCourseById } from "@/api/courses";
-import { getCourseProgress, getCachedWorkout } from "@/api/workouts";
+import {
+  getCourseProgress,
+  getCachedWorkout,
+  WorkoutProgress,
+} from "@/api/workouts";
 import { Course, difficultyMap } from "@/types/course";
 import { getToken } from "@/utils/auth";
 import { getNameFromEmail } from "@/utils/user";
@@ -77,7 +81,7 @@ export default function ProfilePage() {
                   const exercisesCount = workout.exercises.length;
 
                   const workoutProgress = workoutsProgress.find(
-                    (wp: any) => wp.workoutId === workoutId
+                    (wp: WorkoutProgress) => wp.workoutId === workoutId
                   );
 
                   if (workoutProgress && workoutProgress.progressData) {
