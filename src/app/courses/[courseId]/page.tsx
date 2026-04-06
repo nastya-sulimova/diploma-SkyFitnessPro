@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { fetchCourseById } from "@/api/courses";
-import { getCachedWorkout } from "@/api/workouts";
+import { getCachedWorkout, getWorkoutProgress } from "@/api/workouts";
 import { COURSE_PAGE_IMAGES, COURSE_IMAGES } from "@/utils/constants";
 import { useUserCourses } from "@/hooks/useUserCourses";
 import { useParams } from "next/navigation";
@@ -22,7 +22,7 @@ export default function CoursePage() {
 
   const [course, setCourse] = useState<Course | null>(null);
   const [workoutList, setWorkoutList] = useState<
-    Array<{ id: string; name: string }>
+    Array<{ id: string; name: string; completed: boolean }>
   >([]);
   const [loading, setLoading] = useState(true);
   const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
@@ -45,15 +45,29 @@ export default function CoursePage() {
             data.workouts.map(async (workoutId: string, index: number) => {
               try {
                 const workout = await getCachedWorkout(workoutId);
+
+                let isCompleted = false;
+                try {
+                  const progress = await getWorkoutProgress(
+                    courseId,
+                    workoutId
+                  );
+                  isCompleted = progress.workoutCompleted === true;
+                } catch (err) {
+                  isCompleted = false;
+                }
+
                 return {
                   id: workoutId,
                   name: workout?.name || `Тренировка ${index + 1}`,
+                  completed: isCompleted,
                 };
               } catch (err) {
                 console.error(`Error loading workout ${workoutId}:`, err);
                 return {
                   id: workoutId,
                   name: `Тренировка ${index + 1}`,
+                  completed: false,
                 };
               }
             })

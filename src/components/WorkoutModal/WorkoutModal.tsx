@@ -5,7 +5,7 @@ import styles from "./workoutModal.module.css";
 
 interface WorkoutModalProps {
   isOpen: boolean;
-  workouts: Array<{ id: string; name: string }>;
+  workouts: Array<{ id: string; name: string; completed: boolean }>;
   onClose: () => void;
   onStart: (workoutId: string) => void;
 }
@@ -41,7 +41,12 @@ export default function WorkoutModal({
 
         <div className={styles.workoutsList}>
           {workouts.map((workout) => (
-            <label key={workout.id} className={styles.workoutItem}>
+            <label
+              key={workout.id}
+              className={`${styles.workoutItem} ${
+                workout.completed ? styles.completed : ""
+              }`}
+            >
               <div
                 className={styles.customCheckbox}
                 onClick={() => handleToggleWorkout(workout.id)}
@@ -73,7 +78,16 @@ export default function WorkoutModal({
                   </svg>
                 )}
               </div>
-              <span className={styles.workoutName}>{workout.name}</span>
+              <span
+                className={`${styles.workoutName} ${
+                  workout.completed ? styles.completedText : ""
+                }`}
+              >
+                {workout.name}
+                {workout.completed && (
+                  <span className={styles.completedBadge}>✓</span>
+                )}
+              </span>
             </label>
           ))}
         </div>
