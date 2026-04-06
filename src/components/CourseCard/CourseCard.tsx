@@ -59,12 +59,16 @@ export default function CourseCard({
   };
 
   return (
-    <div className={styles.card}>
+    <div
+      className={styles.card}
+      onClick={!isProfile ? handleCourseClick : undefined}
+      style={{ cursor: !isProfile ? "pointer" : "default" }}
+    >
       <div className={styles.imageContainer}>
         <Image
           src={imageSrc}
           alt={title}
-          fill
+          fill={true}
           className={styles.image}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           loading="eager"
@@ -76,7 +80,14 @@ export default function CourseCard({
         >
           <button
             className={styles.addCourseBtn}
-            onClick={isProfile ? handleRemoveCourse : handleCourseClick}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (isProfile) {
+                handleRemoveCourse(e);
+              } else {
+                handleCourseClick();
+              }
+            }}
             disabled={isProfile && isDeleting}
           >
             {isProfile ? (
